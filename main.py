@@ -4,21 +4,15 @@ import os
 
 import telebot
 
-from nvs_partition_gen_wrapper import generate_nvs
+from nvs_partition_gen_wrapper import generate_nvs, InputFile, OutputFile
 
 TOKEN = os.getenv("TG_BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
-RESPONCE_BIN_FILE_NAME = "nvs.bin"
-
-
-class NamedBytesIO(io.BytesIO):
-    name = RESPONCE_BIN_FILE_NAME
-
 
 @bot.message_handler(commands=["help"])
 def handle_help(message):
-    HELP_MSG = "I am help message"
+    HELP_MSG = "Send nvs.csv and receive nvs.bin"
     bot.reply_to(message, HELP_MSG)
 
 
@@ -29,14 +23,13 @@ def handle_help(message):
 def handle_csv_document(message):
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
-    output = generate_nvs(downloaded_file)
-    virtual_output_file = NamedBytesIO(output)
-    bot.send_document(message.chat.id, telebot.types.InputFile(virtual_output_file))
+    output = generate_nvs(InputFile(downloaded_file.decode()))
+    bot.send_document(message.chat.id, telebot.types.InputFile(output))
 
 
 @bot.message_handler(func=lambda _: True)
 def other(message):
-    OTHER_MSG = "Is not supported yet"
+    OTHER_MSG = "Csv parsing from message is not supported yet"
     bot.reply_to(message, OTHER_MSG)
 
 
