@@ -1,6 +1,6 @@
-from dataclasses import dataclass
-import logging
 import builtins
+import logging
+from dataclasses import dataclass
 
 try:
     from nvs_partition_gen import generate

@@ -1,8 +1,10 @@
-import telebot
+import io
 import logging
 import os
+
+import telebot
+
 from nvs_partition_gen_wrapper import generate_nvs
-import io
 
 TOKEN = os.getenv("TG_BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
