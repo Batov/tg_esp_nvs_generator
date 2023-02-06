@@ -23,8 +23,16 @@ def handle_help(message):
 def handle_csv_document(message):
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
-    output = generate_nvs(InputFile(downloaded_file.decode()))
-    bot.send_document(message.chat.id, telebot.types.InputFile(output))
+    try:
+        output = generate_nvs(InputFile(downloaded_file.decode()))
+    except Exception as err:
+        bot.reply_to(message, f"Something went wrong: {err}")
+    else:
+        bot.send_document(
+            message.chat.id,
+            telebot.types.InputFile(output),
+            reply_to_message_id=message.message_id,
+        )
 
 
 @bot.message_handler(func=lambda _: True)
