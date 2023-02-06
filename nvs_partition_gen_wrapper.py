@@ -19,20 +19,18 @@ class OutputVirtualFile(BytesIO):
     name = "nvs.bin"
 
 
-@dataclass
-class Args:
-    input: InputVirtualFile
-    output: OutputVirtualFile
-    size: str = ""  # nvs_partition_gen expects to find there string with hex number
-    version: int = 2
-    outdir: str = ""
-
-
-class NvsPartitionGenException(Exception):
-    pass
-
-
 class NvsPartitionGenWrapper:
+    @dataclass
+    class Args:
+        input: InputVirtualFile
+        output: OutputVirtualFile
+        size: str = ""  # nvs_partition_gen expects to find there string with hex number
+        version: int = 2
+        outdir: str = ""
+
+    class NvsContentException(Exception):
+        pass
+
     def __init__(self, input: InputVirtualFile, size: int = 0x3000) -> None:
         self._input = self._is_valid_input(input)
         self._size = self._is_valid_size(size)
@@ -41,7 +39,7 @@ class NvsPartitionGenWrapper:
     def _is_valid_input(self, input):
         for line in input.readlines():
             if "file" in line:
-                raise NvsPartitionGenException("NVS `file` type is not supported")
+                raise self.NvsContentException("NVS `file` type is not supported")
         return input
 
     def _is_valid_size(self, size):
@@ -56,7 +54,9 @@ class NvsPartitionGenWrapper:
             pass
 
     def nvs_partition_gen(self) -> OutputVirtualFile:
-        args = Args(input=self._input, output=self._output, size=f"0x{self._size:x}")
+        args = self.Args(
+            input=self._input, output=self._output, size=f"0x{self._size:x}"
+        )
 
         origin_os_path_splitext = origin_tool.os.path.splitext
 
