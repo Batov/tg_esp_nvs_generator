@@ -4,7 +4,7 @@ import os
 
 import telebot
 
-from nvs_partition_gen_wrapper import generate_nvs, InputFile, OutputFile
+from nvs_partition_gen_wrapper import NvsPartitionGenWrapper, InputVirtualFile
 
 TOKEN = os.getenv("TG_BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
@@ -23,8 +23,10 @@ def handle_help(message):
 def handle_csv_document(message):
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
+    input = InputVirtualFile(downloaded_file.decode())
     try:
-        output = generate_nvs(InputFile(downloaded_file.decode()))
+        wrapper = NvsPartitionGenWrapper(input)
+        output = wrapper.nvs_partition_gen()
     except Exception as err:
         bot.reply_to(message, f"Something went wrong: {err}")
     else:
