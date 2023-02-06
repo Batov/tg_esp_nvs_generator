@@ -36,7 +36,19 @@ def open_virtual_file(file: InputFile | OutputFile, *args, **kwargs):
         pass
 
 
+class NvsException(Exception):
+    pass
+
+
+def _check_input(input: InputFile) -> None:
+    for line in input.readlines():
+        if "file" in line:
+            raise NvsException("NVS `file` type is not supported")
+
+
 def generate_nvs(input: InputFile, size: int = 0x3000) -> OutputFile:
+    _check_input(input)
+
     output = OutputFile()
 
     args = Args(input=input, output=output, size=f"0x{size:x}")
@@ -62,7 +74,7 @@ def generate_nvs(input: InputFile, size: int = 0x3000) -> OutputFile:
 def test_wrapper():
     logging.basicConfig(level=logging.INFO)
 
-    with open("nvs.csv", "rt") as f:
+    with open("nvs_with_file.csv", "rt") as f:
         input = InputFile(f.read())
         output = generate_nvs(input)
         logging.info(f"Output bin file length: {len(output.read())} bytes")
