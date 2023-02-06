@@ -3,3 +3,4 @@
 /*.csv
 /*.bin
 /__pycache__
+/nvs_partition_gen.py
