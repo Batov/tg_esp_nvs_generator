@@ -1,6 +1,7 @@
 /.vscode
 /venv
-/*.csv
-/*.bin
 /__pycache__
-/nvs_partition_gen.py
+/wrapper/__pycache__
+/wrapper/nvs_partition_gen.py
+/wrapper/test_stuff/input.csv
+/wrapper/test_stuff/*.bin

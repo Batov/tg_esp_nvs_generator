@@ -1,0 +1,18 @@
+key,type,encoding,value
+
+# ntp
+ntp,namespace,,
+url,data,string,pool.ntp.org
+
+# settings
+settings,namespace,,
+T1,data,u32,1
+T2,data,u32,1
+
+# logic
+logic,namespace,,
+activated,data,u8,1
+
+# Manufacturing
+manufacturing,namespace,,
+manuf_code,data,string,"USA"
