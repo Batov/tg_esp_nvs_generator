@@ -13,7 +13,7 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=["help"])
 def handle_help(message):
-    HELP_MSG = "Send nvs.csv and receive nvs.bin"
+    HELP_MSG = "Send nvs.csv and receive nvs.bin. Now it works only with 128k NVS partition size"
     bot.reply_to(message, HELP_MSG)
 
 
@@ -25,12 +25,14 @@ def handle_csv_document(message):
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
     input = InputVirtualFile(downloaded_file.decode())
+    size = 128 * 1024
     try:
-        wrapper = Wrapper(input)
+        wrapper = Wrapper(input, size=size)
         output = wrapper.generate()
     except Exception as err:
         bot.reply_to(message, f"Something went wrong: {err}")
     else:
+        bot.reply_to(message, f"nvs_partition_gen generate 0x{size:x}")
         bot.send_document(
             message.chat.id,
             telebot.types.InputFile(output),
