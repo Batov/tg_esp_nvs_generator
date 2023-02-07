@@ -1,7 +1,8 @@
 # tg_esp_nvs_generator
 Telegram bot for nvs.bin generation 
 
-
+## Setup
 ```
-wget https://raw.githubusercontent.com/espressif/esp-idf/v5.0/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py
+docker build .
+docker run -e TG_BOT_TOKEN="<telegram bot token>" <container>
 ```
