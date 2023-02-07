@@ -45,17 +45,18 @@ class Wrapper:
 def test_wrapper():
     logging.basicConfig(level=logging.INFO)
 
-    NVS_CSV_WITH_FILE_FILENAME = "test_stuff/nvs_with_file.csv"
-    NVS_CSV_FILENAME = "test_stuff/nvs.csv"
-    NVS_BIN_FILENAME = "test_stuff/nvs.bin"
-    SIZE = 0x3000
+    NVS_CSV_WITH_FILE_FILENAME = "wrapper/test_stuff/nvs_with_file.csv"
+    NVS_BIN_FILENAME = "wrapper/test_stuff/nvs.bin"
+    SIZE = 128 * 1024
 
-    from args import ArgsWithPaths
+    from .args import ArgsWithPaths
 
-    args = ArgsWithPaths(NVS_CSV_FILENAME, NVS_BIN_FILENAME, size=f"0x{SIZE:x}")
+    args = ArgsWithPaths(
+        NVS_CSV_WITH_FILE_FILENAME, NVS_BIN_FILENAME, size=f"0x{SIZE:x}"
+    )
     nvs_partition_gen.generate(args)
 
-    with open(NVS_CSV_FILENAME, "rt", encoding="utf-8") as csv:
+    with open(NVS_CSV_WITH_FILE_FILENAME, "rt", encoding="utf-8") as csv:
         input = InputVirtualFile(csv.read())
     output = Wrapper(input, size=SIZE).generate()
     with open(NVS_BIN_FILENAME, "rb") as bin:

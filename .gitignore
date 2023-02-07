@@ -5,3 +5,4 @@
 /wrapper/nvs_partition_gen.py
 /wrapper/test_stuff/input.csv
 /wrapper/test_stuff/*.bin
+/moeco_cert.pem

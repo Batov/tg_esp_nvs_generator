@@ -1,3 +1,6 @@
+import logging
+from os import getenv
+
 from .files import InputVirtualFile, open_virtual_file
 
 _INPUT_REPLACEMENTS = {"moeco_cert.pem": "ENV_MOECO_CERT"}
@@ -17,7 +20,11 @@ def pre_process_input(input: InputVirtualFile) -> InputVirtualFile:
             for line in src:
                 env_key = _get_replacement_env_key(line)
                 if env_key:
-                    pass
+                    env_value = getenv(env_key)
+                    if env_value is None:
+                        logging.warning(f"No env variable {env_key}")
+                    else:
+                        dst.write(env_value)
                 else:
                     dst.write(line)
     return result
