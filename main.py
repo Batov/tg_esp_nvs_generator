@@ -11,7 +11,7 @@ TOKEN = os.getenv("TG_BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
 
-@bot.message_handler(commands=["help"])
+@bot.message_handler(commands=["help", "start"])
 def handle_help(message):
     HELP_MSG = "Send nvs.csv and receive nvs.bin. Now it works only with 128k NVS partition size"
     bot.reply_to(message, HELP_MSG)
